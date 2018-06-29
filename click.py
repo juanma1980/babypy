@@ -22,7 +22,8 @@ class pykids:
 		info=pygame.display.Info()
 		print(info)
 		self.weight,self.height=info.current_w,info.current_h
-		self.weight=int(self.weight/2)
+		if self.weight>2047:
+			self.weight=int(self.weight/2)
 		self.size=self.weight,self.height
 
 		self.screen=pygame.display.set_mode(self.size)
@@ -47,6 +48,7 @@ class pykids:
 		color=(colorr,colorb,colorg)
 		width=random.randint(0,2)
 		if event.button==4 or event.button==5:
+			width=random.randint(10,20)
 			inc=1
 			if event.button==4:
 				inc=-1
