@@ -60,16 +60,14 @@ class pykids:
 		posy=random.randint(0,self.height)
 		color=random.choice(self.colors)
 		size=random.randint(0,self.height)
-		posy=posy-size
-		posx=posx-size
-		if posx<size or posx<0:
-			posx=size
-		if posx+size>self.weight:
-			posx=self.weight-size-10
-		if posy<size or posy<0:
-			posy=size
-		if posy+size>self.height:
-			posy=self.height-size-10
+		while posx+size>self.weight or posx<0:
+			posx=random.randint(0,self.weight)
+			size=random.randint(0,self.height)
+#			posx=posx-size
+		while posy+size>self.height or posy<0:
+			posy=random.randint(0,self.height)
+			size=random.randint(0,self.height)
+#			posy=posy-size
 		print("Screen %sX%s"%(self.size))
 		print("Posx: %s Posy: %s Size: %s"%(posx,posy,size))
 		font=pygame.font.SysFont('roboto',size)
