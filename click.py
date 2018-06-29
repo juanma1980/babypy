@@ -4,11 +4,6 @@ import pygame
 import os
 from pygame.locals import *
 
-BLACK = (  0,   0,   0)
-WHITE = (255, 255, 255)
-BLUE =  (  0,   0, 255)
-GREEN = (  0, 255,   0)
-RED =   (255,   0,   0)
 
 class pykids:
 
@@ -17,7 +12,8 @@ class pykids:
 		self._display_surf=None
 #		self.size=self.weight,self.height=640,400
 		self.geom=['rect','circ']
-		self.colors=[WHITE,BLUE,GREEN,RED]
+		self.posY=0
+		self.posX=0
 
 	def on_init(self):
 		pygame.init()
@@ -38,25 +34,41 @@ class pykids:
 		if event.type==pygame.KEYDOWN:
 			self.lastkey=event.unicode
 		if event.type==pygame.KEYUP:
+			self.posY=0
 			self.on_key(event)
 		if event.type==pygame.MOUSEBUTTONUP:
 			self.on_click(event)
 
 	def on_click(self,event):
 		(posx,posy)=event.pos
-		figure=random.choice(self.geom)
-#		color=random.choice(self.colors)
 		colorr,colorb,colorg=random.randint(0,255),random.randint(0,255),random.randint(0,255)
 		while colorr+colorb+colorg<50:
 			colorr,colorb,colorg=random.randint(0,255),random.randint(0,255),random.randint(0,255)
 		color=(colorr,colorb,colorg)
-		sizeX=random.randint(0,(self.weight-posx))
-		sizeY=random.randint(0,(self.height-posy))
-		width=random.randint(0,10)
-		if figure=='rect':
-			pygame.draw.rect(self.screen,color,[posx,posy,sizeX,sizeY],width)
-		if figure=='circ':
-			pygame.draw.ellipse(self.screen,color,[posx,posy,sizeX,sizeY],width)
+		width=random.randint(0,2)
+		if event.button==4 or event.button==5:
+			inc=1
+			if event.button==4:
+				inc=-1
+			print("%s,%s"%(posx,self.posX))
+			if self.posY and (self.posX==posx or abs(self.posX-posx)<3):
+				self.posY+=inc
+			else:
+				self.posY=posy
+				self.posX=posx
+			pygame.draw.line(self.screen,color,[posx,self.posY],[posx,self.posY+1],width)
+		else:
+			self.posY=0
+			figure=random.choice(self.geom)
+			sizeX=random.randint(0,(self.weight-posx))
+			sizeY=random.randint(0,(self.height-posy))
+			if figure=='rect':
+				pygame.draw.rect(self.screen,color,[posx,posy,sizeX,sizeY],width)
+			if figure=='circ':
+				try:
+					pygame.draw.ellipse(self.screen,color,[posx,posy,sizeX,sizeY],width)
+				except:
+					pass
 		pygame.display.flip()
 				
 	def on_key(self,event):
@@ -66,7 +78,6 @@ class pykids:
 		while colorr+colorb+colorg<50:
 			colorr,colorb,colorg=random.randint(0,255),random.randint(0,255),random.randint(0,255)
 		color=(colorr,colorb,colorg)
-#		color=random.choice(self.colors)
 		size=random.randint(0,self.height)
 		while posx+size>self.weight or posx<0:
 			posx=random.randint(0,self.weight)
