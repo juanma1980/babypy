@@ -10,7 +10,6 @@ class pykids:
 	def __init__(self):
 		self._running=True
 		self._display_surf=None
-#		self.size=self.weight,self.height=640,400
 		self.geom=['rect','circ']
 		self.posY=0
 		self.posX=0
@@ -20,7 +19,6 @@ class pykids:
 		self._running=True
 		self.lastkey=None
 		info=pygame.display.Info()
-		print(info)
 		self.weight,self.height=info.current_w,info.current_h
 		if self.weight>2047:
 			self.weight=int(self.weight/2)
@@ -38,6 +36,8 @@ class pykids:
 			self.posY=0
 			self.on_key(event)
 		if event.type==pygame.MOUSEBUTTONUP:
+			if event.button<4:
+				self.posY=0
 			self.on_click(event)
 
 	def on_click(self,event):
@@ -52,7 +52,6 @@ class pykids:
 			inc=1
 			if event.button==4:
 				inc=-1
-			print("%s,%s"%(posx,self.posX))
 			if self.posY and (self.posX==posx or abs(self.posX-posx)<3):
 				self.posY+=inc
 			else:
@@ -60,7 +59,6 @@ class pykids:
 				self.posX=posx
 			pygame.draw.line(self.screen,color,[posx,self.posY],[posx,self.posY+1],width)
 		else:
-			self.posY=0
 			figure=random.choice(self.geom)
 			sizeX=random.randint(0,(self.weight-posx))
 			sizeY=random.randint(0,(self.height-posy))
@@ -84,13 +82,9 @@ class pykids:
 		while posx+size>self.weight or posx<0:
 			posx=random.randint(0,self.weight)
 			size=random.randint(0,self.height)
-#			posx=posx-size
 		while posy+size>self.height or posy<0:
 			posy=random.randint(0,self.height)
 			size=random.randint(0,self.height)
-#			posy=posy-size
-		print("Screen %sX%s"%(self.size))
-		print("Posx: %s Posy: %s Size: %s"%(posx,posy,size))
 		font=pygame.font.SysFont('roboto',size)
 		f=font.render(self.lastkey,False,color,None)
 		self._display_surf.blit(f,(posx,posy))
@@ -108,7 +102,6 @@ class pykids:
 	def on_execute(self):
 		if self.on_init()==False:
 				self._running=False
-#		self.screen.display.fill(BLACK)
 		while (self._running):
 			for event in pygame.event.get():
 				self.on_event(event)
